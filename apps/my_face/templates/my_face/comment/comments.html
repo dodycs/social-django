@@ -1,0 +1,13 @@
+<div class="comments ml-4">
+   {% for comment in post.comments.all %}
+   <h4>{{ comment.content }}</h4>
+   <div class="d-flex justify-content-between">
+      {% if comment.user_id == request.session.user_id %}
+      <p>
+         <a href="{% url 'my_face:delete_comment' comment_id=comment.id %}">Delete</a>
+      </p>
+      {% endif %}
+      <p>{{ comment.updated_at}}</p>
+   </div>
+   {% endfor %} {% if post_to_user_id in related_user %} {% include 'my_face/comment/post_comment.html' %} {% endif %}
+</div>

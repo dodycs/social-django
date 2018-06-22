@@ -1,0 +1,50 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+   <div class="container">
+      <div class="col-2">
+         <p class="text-right p-0 m-0">
+            <a class="navbar-brand text-right" href="{% url 'my_face:index' %}">MyFace</a>
+         </p>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+      </div>
+
+      <div class="col-10">
+         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if 'user_id' in request.session %}
+            <form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'my_face:post_search_user' %}">
+               {% csrf_token %}
+               <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ml-auto">
+               <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                     aria-expanded="false">
+                     {{ request.session.full_name}}
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                     <a class="dropdown-item" href="{% url 'my_face:logout' %}">Logout</a>
+                  </div>
+               </li>
+            </ul>
+            {% else %}
+            <ul class="navbar-nav d-flex justify-content-center">
+               <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                     aria-expanded="false">
+                     Get Started
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                     <a class="dropdown-item" href="{% url 'my_face:login' %}">Login</a>
+                     <a class="dropdown-item" href="{% url 'my_face:register' %}">Register</a>
+                  </div>
+               </li>
+            </ul>
+            {% endif %}
+
+         </div>
+      </div>
+   </div>
+</nav>

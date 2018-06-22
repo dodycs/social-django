@@ -1,0 +1,8 @@
+{% if 'user_id' in request.session %}
+<div class="text-right">
+   <h2><a href="{% url 'my_face:wall' user_id=request.session.user_id %}">{{ request.session.full_name }}</a></h2>
+   <p class="p-0 mb-0"><a href="{% url 'my_face:following' user_id=request.session.user_id %}">Following</a></p>
+   <p class="p-0 mb-3"><a href="{% url 'my_face:follower' user_id=request.session.user_id %}">Followers</a></p>
+   <p class="p-0 mb-2"><a href="{% url 'my_face:photo' %}">Photos</a></p>
+</div>
+{% endif %}

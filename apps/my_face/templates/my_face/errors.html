@@ -1,0 +1,12 @@
+{% if messages %}
+   {% for message in messages %}
+   {% if message.level == 40 %}
+<p class="text-danger {{ message.tags }}">{{message}}</p>
+ {% elif message.level == 25 %}
+ <div style="display:none" class="mess">{{message}}</div>
+ {% endif %}
+   {% endfor %}
+
+{% endif %}
+
+

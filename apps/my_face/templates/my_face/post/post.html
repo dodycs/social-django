@@ -1,0 +1,29 @@
+<div class="col-12 mb-3">
+   <div class="card post">
+      <div class="card-body">
+         <div class="d-flex justify-content-between">
+            <p>
+               <a href="{% url 'my_face:wall' user_id=post.from_user_id %}">{{post.from_user.full_name}}</a>
+               {% if post.from_user_id != post.to_user_id %} >
+               <a href="{% url 'my_face:wall' user_id=post.to_user_id %}">{{post.to_user.full_name}}</a>
+               {% endif %}
+            </p>
+         </div>
+         <h3 class="card-title">
+            <span class="border-left-4">{{post.content}}</span>
+         </h3>
+         <div class="d-flex justify-content-between">
+            {% if post.from_user.id == request.session.user_id %}
+            <p class="mr-1 mb-0">
+               <a class="error" href="{% url 'my_face:delete_post' post_id=post.id %}">Delete</a>
+            </p>
+            {% endif %}
+            <p>{{post.updated_at}}</p>
+         </div>
+         {% if post.to_user_id %}
+            <!-- comments -->
+            {% include 'my_face/comment/comments.html' %} 
+         {% endif %}
+      </div>
+   </div>
+</div>
