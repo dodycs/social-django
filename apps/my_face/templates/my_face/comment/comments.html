@@ -9,5 +9,8 @@
       {% endif %}
       <p>{{ comment.updated_at}}</p>
    </div>
-   {% endfor %} {% if post_to_user_id in related_user %} {% include 'my_face/comment/post_comment.html' %} {% endif %}
+   {% endfor %} 
+      {% if post_to_user_id in related_user %}
+      {% include 'my_face/comment/post_comment.html' %}
+   {% endif %}
 </div>

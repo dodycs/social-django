@@ -1,42 +1,45 @@
 {% extends 'my_face/base.html' %} {% block body %}
 
 <div class="row">
-   <div class="col-12 mb-3">
-      <div class="card">
-         <div class="card-body">
-            <div class="d-flex justify-content-end">
-               <p class="mr-2">
-                  {% if user.id in followings %}
-                  <a href="{% url 'my_face:unfollow' follower_id=request.session.user_id following_id=user.id %}" class="btn btn-warning btn-sm">Unollow</a>
-                  {% else %}
-                  <a href="{% url 'my_face:follow' follower_id=request.session.user_id following_id=user.id %}" class="btn btn-success btn-sm">Follow</a>
-                  {% endif %}
+      <div class="col-12 mb-3">
+            <div class="card">
+                  <div class="card-body">
+                        <div class="d-flex justify-content-end">
+                              <p class="mr-2">
+                                    {% if user.id in followings %}
+                                    <a href="{% url 'my_face:unfollow' follower_id=request.session.user_id following_id=user.id %}" class="btn btn-warning btn-sm">Unollow</a>
+                                    {% else %}
+                                    <a href="{% url 'my_face:follow' follower_id=request.session.user_id following_id=user.id %}" class="btn btn-success btn-sm">Follow</a>
+                                    {% endif %}
+                              </p>
+                        </div>
+                        <h5 class="card-title">
+                              <a href="">{{user.full_name}}</a>
+                        </h5>
+                        <p class="card-text">{{user.updated_at}}</p>
+                  </div>
             </div>
-            <h5 class="card-title">
-               <a href="">{{user.full_name}}</a>
-            </h5>
-            <p class="card-text">{{user.updated_at}}</p>
-         </div>
       </div>
-   </div>
 </div>
 
 
 {% if post_to_user_id in related_user %}
 <form action="{% url 'my_face:create_post' %}" method="POST">
-   <div class="form-group">
-      {% csrf_token %}
-      <input type="hidden" name="post_to_user_id" value="{{ post_to_user_id }}">
-      <textarea name="content" class="form-control" rows="3">Write something to {{user.full_name}}</textarea>
-   </div>
-   <div class="d-flex justify-content-end">
-      <button type="submit" class="btn btn-success">Post</button>
-   </div>
+      <div class="form-group">
+            {% csrf_token %}
+            <input type="hidden" name="post_to_user_id" value="{{ post_to_user_id }}">
+            <textarea name="content" class="form-control" rows="3">Write something to {{user.full_name}}</textarea>
+      </div>
+      <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success">Post</button>
+      </div>
 </form>
 {% endif %}
 <hr>
 <!-- POST -->
 <div class="row">
-   {% for post in posts %} {% include 'my_face/post/post.html' %} {% endfor %}
+      {% for post in posts %}
+            {% include 'my_face/post/post.html' %}
+      {% endfor %}
 </div>
 {% include 'my_face/errors.html' %} {% endblock %}

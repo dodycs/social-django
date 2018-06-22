@@ -1,10 +1,9 @@
-{% extends 'my_face/base.html' %}
-{% block body %}
+{% extends 'my_face/base.html' %} {% block body %}
 
 <form action="{% url 'my_face:create_post' %}" method="POST">
    <div class="form-group">
       {% csrf_token %}
-      <input type="hidden" name="to_user_id" value="{{ request.session.user_id }}">
+      <input type="hidden" name="post_to_user_id" value="{{ request.session.user_id }}">
       <textarea name="content" class="form-control" rows="3"></textarea>
    </div>
    <div class="d-flex justify-content-end">
@@ -19,5 +18,4 @@
    {% endfor %}
 </div>
 
-{% include 'my_face/errors.html' %}
-{% endblock %}
+{% include 'my_face/errors.html' %} {% endblock %}

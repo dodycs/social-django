@@ -17,8 +17,13 @@ def index(request):
 	if 'user_id' in request.session:
 		posts = m.Post.objects.filter(from_user_id=request.session['user_id'])
 		followings = utils.user_followings(request.session['user_id'])
+		followers = utils.user_followers(request.session['user_id'])
+		related_user = followings+followers
 		context = {
 			'followings': followings,
+			'followers': followers,
+			'related_user': related_user,
+			'post_to_user_id': request.session['user_id'],
 			'posts': posts,
 		}
 		return render(request, 'my_face/index.html', context)
@@ -179,6 +184,13 @@ def search_user(request, keyword):
 	}
 	return render(request, 'my_face/user/users.html', context)
 
+def user_setting(request):
+	user = m.User.objects.get(id=request.session['user_id'])
+	context = {
+		'user': user
+	}
+	return render(request, 'my_face/user/settings.html', context)
+
 def following(request, user_id):
 	users = m.User.objects.filter(follow_by__follower_id=user_id)
 	followings = utils.user_followings(request.session['user_id'])
@@ -221,7 +233,6 @@ def unfollow(request, follower_id, following_id):
 	# ...
 	return redirect(request.META['HTTP_REFERER'])
 
-
 def wall(request, user_id):
 	posts = m.Post.objects.filter(to_user_id=user_id)
 	followings = utils.user_followings(request.session['user_id'])
@@ -249,6 +260,59 @@ def generate_user(request):
 		user.save()
 	return redirect('my_face:index')
 
+def update_information(request):
+
+	if request.method == 'POST':
+		error_messages = []
+		full_name = request.POST['full_name']
+		email = request.POST['email']
+		# validation
+		# cannot blank
+		if len(full_name) < 1:
+				error_messages.append('Full name cannot be blank')
+		if len(email) < 1:
+				error_messages.append('Email cannot be blank')
+		# if no error message:
+		if len(error_messages) == 0:
+			user = m.User.objects.get(id=request.session['user_id'])
+			user.full_name = full_name
+			user.email = email
+			user.save()
+			messages.success(request, 'Success updates profile')
+		else:
+			for msg in error_messages:
+				messages.error(request, msg)
+		return redirect('my_face:user_setting')
+	return redirect('my_face:user_setting')
+
+def update_password(request):
+	if request.method == 'POST':
+		error_messages = []
+		password = request.POST['password']
+		confirm = request.POST['confirm']
+		if len(password) < 1:
+				error_messages.append('Password cannot be blank')
+		if len(confirm) < 1:
+				error_messages.append('Confirm password cannot be blank')
+		# password more than 6 character
+		if len(password) < 6:
+				error_messages.append('Password must at least 6 character')
+		# password missmatch
+		if password != confirm:
+				error_messages.append('Password not match')
+
+		# if no error message:
+		if len(error_messages) == 0:
+			user = m.User.objects.get(id=request.session['user_id'])
+			hash_password = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt()).decode('utf-8')
+			user.password = hash_password
+			user.save()
+			messages.success(request, 'Success updates password')
+		else:
+			for msg in error_messages:
+				messages.error(request, msg)
+		return redirect('my_face:user_setting')
+	return redirect('my_face:user_setting')
 
 # PHOTO
 def photo(request):
